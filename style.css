@@ -1,3 +1,32 @@
+.title-box {
+  width: 100%;
+  text-align: center;
+  background-color: var(--light-bg-color);
+  padding: 2rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+body.dark .title-box {
+  background-color: var(--light-bg-color);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--light-text-color);
+}
+
 :root {
   --primary-color: #356aff;
   --dark-primary-color: #0d2d86;
@@ -38,10 +67,9 @@ body {
   background-color: var(--bg-color);
   margin-bottom: 5rem;
 
-  /* disable user select */
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none; 
 }
 body.dark {
   --bg-color: #111116;
@@ -246,12 +274,15 @@ body.dark {
   background-color: var(--primary-color);
 }
 
-.footer{
+.footer {
   height: 5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
 }
+
 .heading {
   color: var(--text-color);
   text-align: center;
@@ -260,9 +291,8 @@ body.dark {
   text-decoration: none;
   color: var(--primary-color);
 }
-/* dark/light mode button */
+
 .mode {
-  /* position: fixed; */
   bottom: 20px;
   right: 20px;
   z-index: 1;
@@ -291,9 +321,7 @@ body.dark {
   display: block;
   --width-of-switch: 3.5em;
   --height-of-switch: 2em;
-  /* size of sliding icon -- sun and moon */
   --size-of-icon: 1.4em;
-  /* it is like a inline-padding of switch */
   --slider-offset: 0.3em;
   position: relative;
   width: var(--width-of-switch);
@@ -334,11 +362,9 @@ input:checked + .slider {
 input:checked + .slider:before {
   left: calc(100% - (var(--size-of-icon,1.4em) + var(--slider-offset,0.3em)));
   background: #303136;
-  /* change the value of second inset in box-shadow to change the angle and direction of the moon  */
   box-shadow: inset -3px -2px 5px -2px var(--dark-primary-color), inset -10px -4px 0 0 var(--primary-color);
 }
 
-/* media quiries */
 @media (max-width: 800px) {
   .container {
     width: 100%;
