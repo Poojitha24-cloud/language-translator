@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="Poojitha D">
+    <meta name="author" content="Amirhossein Allami">
     <meta name="description" content="Language Translator">
     <meta name="keywords" content="language translator, translator">
     <link rel="icon" href="favicon.png">
@@ -20,6 +20,10 @@
     <title>Language Translator</title>
   </head>
   <body>
+<div class="title-box">
+  <h1 class="main-title">Language Translator</h1>
+  <p class="subtitle">Translate text, documents, and speech instantly</p>
+</div>
     <div class="container">
       <div class="card input-wrapper">
         <div class="from">
@@ -44,6 +48,9 @@
             placeholder="Enter text"
           ></textarea>
           <div class="chars"><span id="input-chars">0</span> / 5000</div>
+            <button id="mic-btn" title="Speak" style="position:absolute; bottom:10px; left:10px; background:var(--primary-color); color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer;">
+            <ion-icon name="mic-outline"></ion-icon>
+        </button>
         </div>
         <div class="card-bottom">
           <p>Or choose your document</p>
@@ -105,5 +112,4 @@
     <script src="languages.js"></script>
     <script src="script.js"></script>
   </body>
-
 </html>
