@@ -1,6 +1,4 @@
-// Wait for DOM to be fully loaded before accessing elements
 document.addEventListener("DOMContentLoaded", () => {
-  // Define all DOM elements first
   const dropdowns = document.querySelectorAll(".dropdown-container");
   const inputLanguageDropdown = document.querySelector("#input-language");
   const outputLanguageDropdown = document.querySelector("#output-language");
@@ -15,10 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const darkModeCheckbox = document.getElementById("dark-mode-btn");
   const inputChars = document.querySelector("#input-chars");
 
-  // Set focus on the input text area
   inputTextElem.focus();
 
-  // Populate dropdown function
   function populateDropdown(dropdown, options) {
     dropdown.querySelector("ul").innerHTML = "";
     options.forEach((option) => {
@@ -31,11 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Populate the dropdowns
   populateDropdown(inputLanguageDropdown, languages);
   populateDropdown(outputLanguageDropdown, languages);
 
-  // Setup dropdown event listeners
   dropdowns.forEach((dropdown) => {
     dropdown.addEventListener("click", (e) => {
       dropdown.classList.toggle("active");
@@ -43,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dropdown.querySelectorAll(".option").forEach((item) => {
       item.addEventListener("click", (e) => {
-        //remove active class from current dropdowns
         dropdown.querySelectorAll(".option").forEach((item) => {
           item.classList.remove("active");
         });
@@ -56,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Close dropdowns when clicking outside
   document.addEventListener("click", (e) => {
     dropdowns.forEach((dropdown) => {
       if (!dropdown.contains(e.target)) {
@@ -65,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Debounce function to limit API calls
   function debounce(func, wait) {
     let timeout;
     return function (...args) {
@@ -75,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // Translation function
   function translate() {
     const inputText = inputTextElem.value;
     if (!inputText.trim()) {
@@ -86,13 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputLanguage = inputLanguageDropdown.querySelector(".selected").dataset.value;
     const outputLanguage = outputLanguageDropdown.querySelector(".selected").dataset.value;
 
-    // Don't translate if languages are the same (except for auto)
     if (inputLanguage === outputLanguage && inputLanguage !== "auto") {
       outputTextElem.value = inputText;
       return;
     }
 
-    // Visual indicator that translation is happening
     outputTextElem.value = "Translating...";
 
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${inputLanguage}&tl=${outputLanguage}&dt=t&q=${encodeURI(inputText)}`;
@@ -117,11 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Swap button functionality
   swapBtn.addEventListener("click", (e) => {
-    // disable swap button if input language is Auto
     if (inputLanguage.dataset.value === "auto") {
-      // Visual indication for disabled state
       swapBtn.classList.add("swap-disabled");
       setTimeout(() => {
         swapBtn.classList.remove("swap-disabled");
@@ -129,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Add animation class
     swapBtn.classList.add("swap-animation");
     setTimeout(() => {
       swapBtn.classList.remove("swap-animation");
@@ -143,37 +127,30 @@ document.addEventListener("DOMContentLoaded", () => {
     inputLanguage.dataset.value = outputLanguage.dataset.value;
     outputLanguage.dataset.value = tempValue;
 
-    // Swap text
     const tempInputText = inputTextElem.value;
     inputTextElem.value = outputTextElem.value;
     outputTextElem.value = tempInputText;
 
-    // Update character count
     inputChars.innerHTML = inputTextElem.value.length;
 
     translate();
   });
 
-  // Input text event listener with debounce
   inputTextElem.addEventListener("input", debounce((e) => {
-    // Update character count
     inputChars.innerHTML = inputTextElem.value.length;
 
-    // Limit input to 5000 characters
     if (inputTextElem.value.length > 5000) {
       inputTextElem.value = inputTextElem.value.slice(0, 5000);
       inputChars.innerHTML = inputTextElem.value.length;
     }
 
-    // Only translate if there's content
     if (inputTextElem.value.trim().length > 0) {
       translate();
     } else {
       outputTextElem.value = "";
     }
-  }, 500)); // 500ms delay before translation happens
+  }, 500)); 
 
-  // File upload handling
   uploadDocument.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -181,12 +158,10 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadTitle.innerHTML = file.name;
 
     if (file.type === "text/plain") {
-      // Handle text files
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e) => {
         const content = e.target.result;
-        // Limit to 5000 chars if needed
         inputTextElem.value = content.length > 5000 ? content.slice(0, 5000) : content;
         inputChars.innerHTML = inputTextElem.value.length;
         translate();
@@ -194,10 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (file.type === "application/pdf" ||
       file.type === "application/msword" ||
       file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      // Provide feedback about non-text files
       alert("Note: Only text content can be extracted from these file types. For best results, use plain text files.");
 
-      // For this simple version, we'll just inform the user
       inputTextElem.value = "File format requires additional processing.\nPlease copy and paste the text directly for best results.";
       inputChars.innerHTML = inputTextElem.value.length;
     } else {
@@ -206,7 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Download functionality
   downloadBtn.addEventListener("click", (e) => {
     const outputText = outputTextElem.value;
     if (!outputText.trim()) {
@@ -225,18 +197,14 @@ document.addEventListener("DOMContentLoaded", () => {
     a.href = url;
     a.click();
 
-    // Clean up
     setTimeout(() => URL.revokeObjectURL(url), 100);
   });
 
-  // Dark mode toggle
   darkModeCheckbox.addEventListener("change", () => {
     document.body.classList.toggle("dark");
-    // Optionally save preference to localStorage
     localStorage.setItem("darkMode", darkModeCheckbox.checked);
   });
 
-  // Set default input language (Auto)
   const defaultInputOption = inputLanguageDropdown.querySelector('[data-value="auto"]');
   if (defaultInputOption) {
     const inputSelected = inputLanguageDropdown.querySelector(".selected");
@@ -245,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
     defaultInputOption.classList.add("active");
   }
 
-  // Set default output language (English)
   const defaultOutputOption = outputLanguageDropdown.querySelector('[data-value="en"]');
   if (defaultOutputOption) {
     const outputSelected = outputLanguageDropdown.querySelector(".selected");
@@ -274,10 +241,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Load dark mode preference if saved
   const savedDarkMode = localStorage.getItem("darkMode");
   if (savedDarkMode === "true") {
     darkModeCheckbox.checked = true;
     document.body.classList.add("dark");
   }
+ 
+  const micBtn = document.getElementById("mic-btn");
+  let recognizing = false;
+  let recognition;
+
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-US"; 
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+      recognizing = true;
+      micBtn.style.backgroundColor = "#e74c3c"; 
+    };
+
+    recognition.onend = () => {
+      recognizing = false;
+      micBtn.style.backgroundColor = "var(--primary-color)";
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      inputTextElem.value = transcript;
+      inputChars.innerHTML = transcript.length;
+      translate();
+    };
+
+    micBtn.addEventListener("click", () => {
+      if (recognizing) {
+        recognition.stop();
+        recognizing = false;
+      } else {
+        recognition.start();
+      }
+    });
+  } else {
+    micBtn.disabled = true;
+    micBtn.title = "Speech Recognition not supported in this browser";
+  }
+
 });
