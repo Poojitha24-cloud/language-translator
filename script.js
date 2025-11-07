@@ -247,45 +247,54 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("dark");
   }
  
-  const micBtn = document.getElementById("mic-btn");
-  let recognizing = false;
-  let recognition;
+const micBtn = document.getElementById("mic-btn");
+let recognizing = false;
+let recognition;
 
-  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = "en-US"; 
-    recognition.interimResults = false;
-    recognition.continuous = false;
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.interimResults = false;
+  recognition.continuous = false;
 
-    recognition.onstart = () => {
-      recognizing = true;
-      micBtn.style.backgroundColor = "#e74c3c"; 
-    };
-
-    recognition.onend = () => {
-      recognizing = false;
-      micBtn.style.backgroundColor = "var(--primary-color)";
-    };
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      inputTextElem.value = transcript;
-      inputChars.innerHTML = transcript.length;
-      translate();
-    };
-
-    micBtn.addEventListener("click", () => {
-      if (recognizing) {
-        recognition.stop();
-        recognizing = false;
-      } else {
-        recognition.start();
-      }
-    });
-  } else {
-    micBtn.disabled = true;
-    micBtn.title = "Speech Recognition not supported in this browser";
+  function updateRecognitionLanguage() {
+    const selectedLang = inputLanguageDropdown
+      .querySelector(".selected")
+      .dataset.value || "en";
+    recognition.lang = selectedLang;
   }
+
+  recognition.onstart = () => {
+    recognizing = true;
+    micBtn.style.backgroundColor = "#e74c3c"; 
+    micBtn.title = "Listening...";
+  };
+
+  recognition.onend = () => {
+    recognizing = false;
+    micBtn.style.backgroundColor = "var(--primary-color)";
+    micBtn.title = "Click to speak";
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    inputTextElem.value = transcript;
+    inputChars.innerHTML = transcript.length;
+    translate();
+  };
+
+  micBtn.addEventListener("click", () => {
+    updateRecognitionLanguage();
+    if (recognizing) {
+      recognition.stop();
+      recognizing = false;
+    } else {
+      recognition.start();
+    }
+  });
+} else {
+  micBtn.disabled = true;
+  micBtn.title = "Speech Recognition not supported in this browser";
+}
 
 });
